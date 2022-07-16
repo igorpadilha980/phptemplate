@@ -135,7 +135,7 @@
             }
         }
 
-        private function resolveValue(string $key): string {
+        private function resolveValue(string $key): mixed {
             if(array_key_exists($key, $this->parameters)) {
                 return $this->parameters[$key];
             } elseif(array_key_exists($key, self::$GLOBAL_PROPERTIES)) {
