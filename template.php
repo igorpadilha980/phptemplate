@@ -46,6 +46,8 @@
 
     class Template extends GenericInjectableString {
 
+        private static array $GLOBAL_PROPERTIES = [];
+
         private static array $templateCache = [];
         private static string $identifierPattern = "/\{\{temp:[A-Za-z0-9_]+\}\}|\{\{[A-Za-z0-9_]+\}\}/";
 
@@ -62,6 +64,14 @@
         public static function load(string $templateName): Template {
             $path = self::getTemplatePath($templateName);
             return new Template(TemplateLoader::load($path));
+        }
+
+        public static function setGlobal(string $propertyName, string $value): void {
+            self::$GLOBAL_PROPERTIES[$propertyName] = $value;
+        }
+
+        public static function getGlobal(string $propertyName): string {
+            return self::$GLOBAL_PROPERTIES[$propertyName];
         }
 
         private static function getTemplatePath($templateName): string {
