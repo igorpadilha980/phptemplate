@@ -135,20 +135,24 @@
             }
         }
 
-        private function getInjectionPointOrThrow(string $key): TemplateInjectionPoint {
-            if(array_key_exists($key, $this->injectionPoints)) {
-                return $this->injectionPoints[$key];
+        private function resolveValue(string $key): string {
+            if(array_key_exists($key, $this->parameters)) {
+                return $this->parameters[$key];
+            } elseif(array_key_exists($key, self::$GLOBAL_PROPERTIES)) {
+                return self::$GLOBAL_PROPERTIES;
+            } else {
+                throw new \Exception("unset property '$key'");
             }
-            throw new \Exception("template do not have property called '$key'");
         }
-        public function get(): string {
-            
-            foreach($this->parameters as $key => $value) {
-                $injectionPoint = $this->getInjectionPointOrThrow($key);
-                $output = $this->processInjectionPoint($injectionPoint, $value);
 
-                foreach($injectionPoint->getPositions() as $p) {
-                    $this->template->set($p, $output);
+        public function get(): string {
+
+            foreach($this->injectionPoints as $key => $point) {
+                $value = $this->resolveValue($key);
+                $output = $this->processInjectionPoint($point, $value);
+
+                foreach($point->getPositions() as $position) {
+                    $this->template->set($position, $output);
                 }
             }
 
