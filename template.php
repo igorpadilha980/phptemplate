@@ -139,7 +139,7 @@
             if(array_key_exists($key, $this->parameters)) {
                 return $this->parameters[$key];
             } elseif(array_key_exists($key, self::$GLOBAL_PROPERTIES)) {
-                return self::$GLOBAL_PROPERTIES;
+                return self::getGlobal($key);
             } else {
                 throw new \Exception("unset property '$key'");
             }
